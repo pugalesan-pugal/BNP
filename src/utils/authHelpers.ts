@@ -6,6 +6,11 @@ export const simpleLoginWithCredentials = async (email: string, password: string
   try {
     console.log('Checking login collection for:', email);
     
+    // Check if Firebase is available
+    if (!db) {
+      throw new Error('Firebase is not available. Please check your configuration.');
+    }
+    
     // Query the login collection for the user with matching email
     const loginCollection = collection(db, 'login');
     const q = query(loginCollection, where('email', '==', email));

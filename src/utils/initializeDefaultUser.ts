@@ -16,6 +16,19 @@ export const initializeDefaultUser = async () => {
   try {
     console.log('Checking for default admin user...');
     
+    // Check if Firebase is available
+    if (!db) {
+      console.warn('Firebase is not available. Using fallback credentials.');
+      return {
+        success: true,
+        message: 'Firebase not available, using fallback credentials',
+        credentials: {
+          email: DEFAULT_ADMIN.email,
+          password: DEFAULT_ADMIN.password
+        }
+      };
+    }
+    
     // Check if default admin user already exists
     const loginCollection = collection(db, 'login');
     const q = query(loginCollection, where('email', '==', DEFAULT_ADMIN.email));
@@ -52,7 +65,10 @@ export const initializeDefaultUser = async () => {
     return {
       success: false,
       message: `Error: ${error}`,
-      credentials: null
+      credentials: {
+        email: DEFAULT_ADMIN.email,
+        password: DEFAULT_ADMIN.password
+      }
     };
   }
 };
